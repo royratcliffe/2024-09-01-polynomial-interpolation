@@ -15,8 +15,8 @@
  *
  * \see https://netlib.org/slatec/src/polint.f
  */
-static inline int polint(size_t n, const double *x, const double *y,
-                         double *c) {
+static inline int polint(size_t n, const double x[], const double y[],
+                         double c[]) {
   if (n == 0)
     return 1;
   c[0] = y[0];
@@ -38,7 +38,8 @@ static inline int polint(size_t n, const double *x, const double *y,
 /*!
  * \brief Single-precision polynomial interpolation.
  */
-static inline int polintf(size_t n, const float *x, const float *y, float *c) {
+static inline int polintf(size_t n, const float x[], const float y[],
+                          float c[]) {
   if (n == 0)
     return 1;
   c[0] = y[0];
