@@ -35,6 +35,8 @@ static inline double polyvl(double xx, size_t n, const double x[],
  */
 static inline float polyvlf(float xx, size_t n, const float x[],
                             const float c[]) {
+  if (n == 0)
+    return 0;
   float pione = 1, pone = c[0];
   if (n == 1)
     return pone;
