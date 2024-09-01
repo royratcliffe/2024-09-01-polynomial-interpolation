@@ -30,6 +30,9 @@ static inline double polyvl(double xx, size_t n, const double x[],
   return ptwo;
 }
 
+/*!
+ * \brief Computes polynomial single-precision values.
+ */
 static inline float polyvlf(float xx, size_t n, const float x[],
                             const float c[]) {
   float pione = 1, pone = c[0];
