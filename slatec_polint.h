@@ -46,7 +46,7 @@ static inline int slatec_polintf(size_t n, const float x[], const float y[],
     return 0;
   for (size_t k = 1; k < n; k++) {
     c[k] = y[k];
-    for (size_t i = 0; i < k - 1; i++) {
+    for (size_t i = 0; i < k; i++) {
       const float dif = x[i] - x[k];
       if (dif == 0)
         return -2;
