@@ -21,10 +21,12 @@ extern "C" {
 #include <vector>
 
 template <typename Scalar>
-int polint(size_t n, const Scalar x[], const Scalar y[], Scalar c[]);
+enum slatec_polint_status polint(size_t n, const Scalar x[], const Scalar y[],
+                                 Scalar c[]);
 
 template <typename Scalar>
-int polyvl(Scalar xx, Scalar *yy, size_t n, const Scalar x[], const Scalar c[]);
+enum slatec_polyvl_status polyvl(Scalar xx, Scalar *yy, size_t n,
+                                 const Scalar x[], const Scalar c[]);
 
 template <typename Scalar>
 struct poly_interpolator // a unary functor
@@ -83,19 +85,22 @@ public:
     }
   }
 
-  int interpolate() {
-    if (N.size() == 0)
-      return -1;
-    return polint(N.size(), X.data(), Y.data(), C.data());
+  void interpolate() {
+    enum slatec_polint_status status =
+        polint(N.size(), X.data(), Y.data(), C.data());
+    if (status != slatec_polint_success)
+      throw status;
   }
 
   Scalar operator()(const Scalar &x) const {
     if (N.size() == 0)
       return x;
     Scalar y;
-    return polyvl(x, &y, N.size(), X.data(), C.data()) < 0
-               ? std::numeric_limits<Scalar>::quiet_NaN()
-               : y;
+    enum slatec_polyvl_status status =
+        polyvl(x, &y, N.size(), X.data(), C.data());
+    if (status != slatec_polyvl_success)
+      throw status;
+    return y;
   }
 
   size_t n() const   // How many interpolating
@@ -141,8 +146,7 @@ int main(int argc, char *argv[]) {
   double x, y;
   while (optind < argc && sscanf(argv[optind++], " %lf,%lf", &x, &y) == 2)
     poly.add(x, y);
-  if (poly.interpolate() < 0)
-    return EXIT_FAILURE;
+  poly.interpolate();
   for (x = a; x < b; x += c)
     printf("%lf,%lf\n", x, poly(x));
   return EXIT_SUCCESS;
@@ -153,24 +157,26 @@ int main(int argc, char *argv[]) {
 #endif
 
 template <>
-int polint<double>(size_t n, const double x[], const double y[], double c[]) {
+enum slatec_polint_status polint<double>(size_t n, const double x[],
+                                         const double y[], double c[]) {
   return slatec_polint(n, x, y, c);
 }
 
 template <>
-int polyvl<double>(double xx, double *yy, size_t n, const double x[],
-                   const double c[]) {
+enum slatec_polyvl_status polyvl<double>(double xx, double *yy, size_t n,
+                                         const double x[], const double c[]) {
   return slatec_polyvl(xx, yy, n, x, c);
 }
 
 template <>
-int polint<float>(size_t n, const float x[], const float y[], float c[]) {
+enum slatec_polint_status polint<float>(size_t n, const float x[],
+                                        const float y[], float c[]) {
   return slatec_polintf(n, x, y, c);
 }
 
 template <>
-int polyvl<float>(float xx, float *yy, size_t n, const float x[],
-                  const float c[]) {
+enum slatec_polyvl_status polyvl<float>(float xx, float *yy, size_t n,
+                                        const float x[], const float c[]) {
   return slatec_polyvlf(xx, yy, n, x, c);
 }
 
