@@ -3,7 +3,9 @@
 /*
  * for size_t
  */
-#include <stdlib.h>
+#include <stddef.h>
+
+enum slatec_polyvl_status { slatec_polyvl_success, slatec_polyvl_failure = -1 };
 
 /*!
  * \brief Computes polynomial double-precision values.
@@ -17,14 +19,16 @@
  *
  * \see https://netlib.org/slatec/src/polyvl.f
  */
-static inline int slatec_polyvl(double xx, double *yy, size_t n,
-                                const double x[], const double c[]) {
+static inline enum slatec_polyvl_status slatec_polyvl(double xx, double *yy,
+                                                      size_t n,
+                                                      const double x[],
+                                                      const double c[]) {
   if (n == 0)
-    return -1;
+    return slatec_polyvl_failure;
   double pione = 1, pone = c[0];
   if (n == 1) {
     *yy = pone;
-    return 0;
+    return slatec_polyvl_success;
   }
   double ptwo;
   for (size_t k = 1; k < n; k++) {
@@ -34,20 +38,22 @@ static inline int slatec_polyvl(double xx, double *yy, size_t n,
     pone = ptwo;
   }
   *yy = ptwo;
-  return 0;
+  return slatec_polyvl_success;
 }
 
 /*!
  * \brief Computes polynomial single-precision values.
  */
-static inline int slatec_polyvlf(float xx, float *yy, size_t n, const float x[],
-                                 const float c[]) {
+static inline enum slatec_polyvl_status slatec_polyvlf(float xx, float *yy,
+                                                       size_t n,
+                                                       const float x[],
+                                                       const float c[]) {
   if (n == 0)
-    return -1;
+    return slatec_polyvl_failure;
   float pione = 1, pone = c[0];
   if (n == 1) {
     *yy = pone;
-    return 0;
+    return slatec_polyvl_success;
   }
   float ptwo;
   for (size_t k = 1; k < n; k++) {
@@ -57,5 +63,5 @@ static inline int slatec_polyvlf(float xx, float *yy, size_t n, const float x[],
     pone = ptwo;
   }
   *yy = ptwo;
-  return 0;
+  return slatec_polyvl_success;
 }
