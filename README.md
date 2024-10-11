@@ -347,9 +347,11 @@ slatec_pol <- \(x, y) Vectorize(local({
 }))
 ```
 
-Evaluate a cubic polynomial on $$
+Evaluate a cubic polynomial on
+$$
 \left[\begin{smallmatrix}10000&0\\500&0.5\\100&1\end{smallmatrix}\right]
-$$ where $x=10000$ maps to $y=0$, $x=500$ maps to $y=0.5$ and $x=100$
+$$
+where $x=10000$ maps to $y=0$, $x=500$ maps to $y=0.5$ and $x=100$
 maps to $y=1$, or in other words, the resulting interpolation will
 normalise an inverted slightly linear $10000..100$ signal.
 
