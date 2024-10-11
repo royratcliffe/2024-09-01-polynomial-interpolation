@@ -351,9 +351,9 @@ Evaluate a cubic polynomial on
 
 $$
 \left[\begin{smallmatrix}
-10000&0 \\
+10000&0\\
 500&0.5\\
-100&1
+100&1\\
 \end{smallmatrix}\right]
 $$
 
