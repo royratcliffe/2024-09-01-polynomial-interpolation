@@ -1,3 +1,4 @@
+# Polynomial Interpolation
 
 
 <!-- Polynomial Interpolation -->
@@ -179,7 +180,10 @@ static inline enum slatec_polyvl_status slatec_polyvlf(float xx, float *yy,
 ```
 
 Again, the interface is simple: one abscissa in by value, one ordinate
-out by reference.
+out by reference. The vector size $n$ determines the order of the
+polynomial. A one-vector $n=1$ interpolates a flat line equivalent to
+$y=c$; the next order $n=2$ interpolates a straight line equivalent to
+$y=mx+c$; order $n=3$ for cubic and so on.
 
 # Usage
 
@@ -212,6 +216,7 @@ int main(int argc, char *argv[]) {
     case 'd':
       d = atof(optarg);
     }
+
   size_t n = 0;
   double *x = NULL, *y = NULL;
   while (optind < argc &&
@@ -219,12 +224,15 @@ int main(int argc, char *argv[]) {
          (y = realloc(y, sizeof(*y) * (n + 1))) != NULL &&
          sscanf(argv[optind++], " %lf,%lf", x + n, y + n) == 2)
     n++;
+
   double *c = calloc(n, sizeof(*c));
   if (c == NULL)
     return EXIT_FAILURE;
+
   enum slatec_polint_status status = slatec_polint(n, x, y, c);
   if (status != slatec_polint_success)
     return EXIT_FAILURE;
+
   for (double xx = a; xx < b; xx += d) {
     double yy;
     enum slatec_polyvl_status status = slatec_polyvl(xx, &yy, n, x, c);
@@ -235,6 +243,11 @@ int main(int argc, char *argv[]) {
   return EXIT_SUCCESS;
 }
 ```
+
+The example encodes a command-line tool that scans the command-line
+arguments for comma-separated floating-point number pairs, $x$ and $y$
+terms for a polynomial. The number of pairs determines its order. Its
+error handling is basic but it only exists for demonstration purposes.
 
 # Testbed
 
