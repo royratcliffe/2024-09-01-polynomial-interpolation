@@ -1,8 +1,6 @@
 # Polynomial Interpolation
 
 
-<!-- Polynomial Interpolation -->
-
 In real-world engineering projects, precise modelling is not always
 feasible. However, approximations can be effective. Both development-
 and production-level embedded projects can use estimates based on
@@ -248,6 +246,38 @@ The example encodes a command-line tool that scans the command-line
 arguments for comma-separated floating-point number pairs, $x$ and $y$
 terms for a polynomial. The number of pairs determines its order. Its
 error handling is basic but it only exists for demonstration purposes.
+
+Compile the program on a Unix-like system using `gcc pol.c -o pol` and,
+assuming the host has [GNUplot](http://gnuplot.info/) installed, plot an
+ASCII trace using the command pipe below. Notice the double dash: it
+terminates the command line’s option list. The `-10,1` would scan as an
+unrecognised option without it.
+
+    ./pol -a-10 -b10 -- -10,1 -5,0.7 5,-0.3 10,-1 | \
+    gnuplot -e "set terminal dumb; set datafile separator ','; plot '-'"
+
+        1 +--------------------------------------------------------------------+
+          |   AAAAAA       +                 +                +                |
+          |         AAAAAA                                         '-'    A    |
+          |              AAAAA                                                 |
+          |                   AAAAA                                            |
+      0.5 |-+                     AAAAA                                      +-|
+          |                           AAAA                                     |
+          |                               AAAA                                 |
+          |                                  AAAA                              |
+          |                                      AAA                           |
+        0 |-+                                       AAAA                     +-|
+          |                                            AAA                     |
+          |                                               AAA                  |
+          |                                                  AAA               |
+          |                                                    AAAA            |
+     -0.5 |-+                                                     AAA        +-|
+          |                                                         AAAA       |
+          |                                                            AAA     |
+          |                                                              AAAA  |
+          |                +                 +                +             AAA|
+       -1 +--------------------------------------------------------------------+
+         -10              -5                 0                5                10
 
 # Testbed
 
